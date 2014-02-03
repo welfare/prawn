@@ -46,6 +46,19 @@ describe "Prawn::Table" do
   end
 
   describe "You can explicitly set the column widths and use a colspan > 1" do
+    it "should work with two different given colspans", :issue => 628 do 
+      data = [
+              [" ", " ", " "], 
+              [{:content=>" ", :colspan=>3}], 
+              [" ", {:content=>" ", :colspan=>2}]
+            ]
+      column_widths = [60, 240, 60]
+      pdf = Prawn::Document.new
+      #the next line raised an Prawn::Errors::CannotFit exception before issue 628 was fixed
+      table = Prawn::Table.new data, pdf, :column_widths => column_widths
+      table.column_widths.should == column_widths
+    end
+
     it "should work with a colspan > 1 with given column_widths (issue #407)" do
       #normal entries in line 1
       data = [
@@ -78,6 +91,25 @@ describe "Prawn::Table" do
       pdf = Prawn::Document.new
       table = Prawn::Table.new data, pdf, :column_widths => [50 , 100, 50, 50, 50, 50]
 
+    end
+
+    it "should not increase column width when rendering a subtable",
+       :unresolved, :issue => 612 do
+
+      pdf = Prawn::Document.new
+      
+      first = {:content=>"Foooo fo foooooo",:width=>50,:align=>:center}
+      second = {:content=>"Foooo",:colspan=>2,:width=>70,:align=>:center}
+      third = {:content=>"fooooooooooo, fooooooooooooo, fooo, foooooo fooooo",:width=>50,:align=>:center}
+      fourth = {:content=>"Bar",:width=>20,:align=>:center}
+      
+      table_content = [[
+      first,
+      [[second],[third,fourth]]
+      ]]
+      
+      table = Prawn::Table.new table_content, pdf
+      table.column_widths.should == [50.0, 70.0]
     end
 
     it "illustrate issue #533" do
@@ -120,6 +152,15 @@ describe "Prawn::Table" do
 
       # Before we fixed #407, this line incorrectly raise a CannotFit error
       pdf.table(table_data, :column_widths => column_widths)
+    end
+
+    it "should not allow oversized subtables when parent column width is constrained" do
+      pdf = Prawn::Document.new
+      child_1 = pdf.make_table([['foo'*100]])
+      child_2 = pdf.make_table([['foo']])
+      lambda do
+        pdf.table([[child_1], [child_2]], column_widths: [pdf.bounds.width/2] * 2)
+      end.should raise_error(Prawn::Errors::CannotFit)
     end
   end
 

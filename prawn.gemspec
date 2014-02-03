@@ -8,7 +8,8 @@ Gem::Specification.new do |spec|
                 Dir.glob("data/fonts/{MustRead.html,*.afm}") +
                 ["data/shift_jis_text.txt"] +
                 ["Rakefile", "prawn.gemspec", "Gemfile",
-                 "COPYING", "LICENSE", "GPLv2", "GPLv3"]
+                 "COPYING", "LICENSE", "GPLv2", "GPLv3",
+                 ".yardopts"]
   spec.require_path = "lib"
   spec.required_ruby_version = '>= 1.9.3'
   spec.required_rubygems_version = ">= 1.3.6"
@@ -17,9 +18,12 @@ Gem::Specification.new do |spec|
   spec.authors = ["Gregory Brown","Brad Ediger","Daniel Nelson","Jonathan Greenberg","James Healy"]
   spec.email = ["gregory.t.brown@gmail.com","brad@bradediger.com","dnelson@bluejade.com","greenberg@entryway.net","jimmy@deefa.com"]
   spec.rubyforge_project = "prawn"
+  spec.licenses = ['RUBY', 'GPL-2', 'GPL-3']
+
   spec.add_dependency('pdf-reader', '~>1.2')
-  spec.add_dependency('ttfunk', '~>1.0.3')
+  spec.add_dependency('ttfunk', '~> 1.1.0')
   spec.add_dependency('ruby-rc4')
+  spec.add_dependency('pdf-core', "~> 0.1.1")
 
   spec.add_development_dependency('pdf-inspector', '~> 1.1.0')
   spec.add_development_dependency('coderay', '~> 1.0.7')
@@ -27,6 +31,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency('rspec')
   spec.add_development_dependency('mocha')
   spec.add_development_dependency('rake')
+  spec.add_development_dependency('simplecov')
 
   spec.homepage = "http://prawn.majesticseacreature.com"
   spec.description = <<END_DESC

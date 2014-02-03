@@ -4,9 +4,12 @@
 #
 # Author Paul Ostazeski.
 
-require "prawn/document/bounding_box"
+require_relative "bounding_box"
+
 module Prawn
   class Document
+
+    # @group Experimental API
 
     # A column box is a bounding box with the additional property that when
     # text flows past the bottom, it will wrap first to another column on the
